@@ -58,7 +58,6 @@ function CollectionContent({
   deleteBookmark,
   isAdmin,
   isRoot,
-  handleToggleMobileSidebar,
   metadata,
 }) {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -181,7 +180,6 @@ function CollectionContent({
                   collection,
                   collectionList,
                 )}
-                handleToggleMobileSidebar={handleToggleMobileSidebar}
               />
               <PinnedItemOverview
                 items={pinnedItems}
