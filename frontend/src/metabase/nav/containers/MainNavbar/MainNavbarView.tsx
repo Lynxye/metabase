@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { t } from "ttag";
 import _ from "underscore";
 
@@ -13,6 +13,7 @@ import {
   getCollectionIcon,
   PERSONAL_COLLECTIONS,
 } from "metabase/entities/collections";
+import { isSmallScreen } from "metabase/lib/dom";
 import * as Urls from "metabase/lib/urls";
 import { CollectionTreeItem } from "metabase/collections/utils";
 
@@ -27,6 +28,7 @@ type Props = {
   collections: CollectionTreeItem[];
   selectedItem: SelectedItem;
   hasDataAccess: boolean;
+  handleCloseNavbar: () => void;
 };
 
 const BROWSE_URL = "/browse";
@@ -39,6 +41,7 @@ function MainNavbarView({
   collections,
   selectedItem,
   hasDataAccess,
+  handleCloseNavbar,
 }: Props) {
   const isMiscLinkSelected = selectedItem.type === "unknown";
   const isCollectionSelected =
@@ -54,17 +57,28 @@ function MainNavbarView({
     );
   }, []);
 
+  const onItemSelect = useCallback(() => {
+    if (isSmallScreen()) {
+      handleCloseNavbar();
+    }
+  }, [handleCloseNavbar]);
+
   return (
     <>
       {bookmarks.length > 0 && (
         <>
-          <BookmarkList bookmarks={bookmarks} selectedItem={selectedItem} />
+          <BookmarkList
+            bookmarks={bookmarks}
+            selectedItem={selectedItem}
+            onSelect={onItemSelect}
+          />
           <SidebarHeading>{t`Collections`}</SidebarHeading>
         </>
       )}
       <Tree
         data={collections}
         selectedId={isCollectionSelected ? selectedItem.id : undefined}
+        onSelect={onItemSelect}
         TreeNode={CollectionLink}
         role="tree"
       />
@@ -76,6 +90,7 @@ function MainNavbarView({
             isSelected={
               isMiscLinkSelected && selectedItem.url.startsWith(BROWSE_URL)
             }
+            onClick={onItemSelect}
             data-metabase-event="NavBar;Data Browse"
           >
             {t`Browse data`}
@@ -88,6 +103,7 @@ function MainNavbarView({
             isSelected={
               selectedItem.type === "collection" && selectedItem.id === "users"
             }
+            onClick={onItemSelect}
           >
             {t`Other users' personal collections`}
           </SidebarLink>
@@ -98,6 +114,7 @@ function MainNavbarView({
           isSelected={
             isMiscLinkSelected && selectedItem.url.startsWith(ARCHIVE_URL)
           }
+          onClick={onItemSelect}
         >
           {t`View archive`}
         </SidebarLink>

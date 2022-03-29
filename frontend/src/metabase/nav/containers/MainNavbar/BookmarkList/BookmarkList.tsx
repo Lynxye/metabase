@@ -31,6 +31,7 @@ function getIconForEntityType(type: BookmarkableEntities) {
 interface CollectionSidebarBookmarksProps {
   bookmarks: Bookmark[];
   selectedItem: SelectedItem;
+  onSelect: () => void;
   onDeleteBookmark: (bookmark: Bookmark) => void;
 }
 
@@ -40,6 +41,7 @@ const BOOKMARKS_INITIALLY_VISIBLE =
 const BookmarkList = ({
   bookmarks,
   selectedItem,
+  onSelect,
   onDeleteBookmark,
 }: CollectionSidebarBookmarksProps) => {
   const onToggleBookmarks = useCallback(isVisible => {
@@ -67,6 +69,7 @@ const BookmarkList = ({
             key={`bookmark-${id}`}
             url={url}
             icon={getIconForEntityType(type)}
+            onClick={onSelect}
             isSelected={isSelected}
             right={
               <button onClick={onRemove}>

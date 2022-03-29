@@ -12,6 +12,7 @@ interface Props {
   icon: string | IconProps;
   isSelected?: boolean;
   right?: React.ReactNode;
+  onClick?: () => void;
 }
 
 function SidebarLink({
