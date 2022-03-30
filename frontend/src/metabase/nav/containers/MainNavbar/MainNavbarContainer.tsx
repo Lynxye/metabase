@@ -33,6 +33,7 @@ function mapStateToProps(state: unknown) {
 }
 
 type Props = {
+  isOpen: boolean;
   currentUser: User;
   bookmarks: Bookmark[];
   collections: Collection[];
@@ -49,6 +50,7 @@ type Props = {
 };
 
 function MainNavbarContainer({
+  isOpen,
   currentUser,
   collections = [],
   rootCollection,
@@ -104,7 +106,7 @@ function MainNavbarContainer({
   }, [rootCollection, collections, currentUser]);
 
   return (
-    <Sidebar>
+    <Sidebar isOpen={isOpen}>
       {allFetched && rootCollection ? (
         <MainNavbarView
           {...props}
