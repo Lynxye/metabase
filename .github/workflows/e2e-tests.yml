@@ -3,7 +3,7 @@ name: E2E Tests
 on:
   push:
     branches:
-      - 'master'
+      - 'e2e-stress-test-timelines'
 
 jobs:
 
@@ -37,7 +37,7 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2004
     timeout-minutes: 30
     needs: build
-    name: e2e-tests-${{ matrix.folder }}-${{ matrix.edition }}
+    name: e2e-tests-timelines-burn-10
     env:
       MB_EDITION: ${{ matrix.edition }}
       DISPLAY: ""
@@ -49,25 +49,6 @@ jobs:
       fail-fast: false
       matrix:
         edition: [oss, ee]
-        folder:
-          - "admin"
-          - "binning"
-          - "collections"
-          - "custom-column"
-          - "dashboard"
-          - "dashboard-filters"
-          - "dashboard-filters-sql"
-          - "downloads"
-          - "embedding"
-          - "joins"
-          - "models"
-          - "moderation"
-          - "native"
-          - "native-filters"
-          - "permissions"
-          - "question"
-          - "sharing"
-          - "visualizations"
     services:
       maildev:
         image: maildev/maildev:1.1.0
@@ -118,14 +99,14 @@ jobs:
         jar xf target/uberjar/metabase.jar version.properties
         mv version.properties resources/
 
-    - name: Run Cypress tests on ${{ matrix.folder }}
-      run: yarn run test-cypress-no-build --folder ${{ matrix.folder }} --record --key ${{ secrets.CURRENTS_KEY }} --group ${{ matrix.folder }}-${{ matrix.edition }} --ci-build-id "${{ github.run_id }}-${{ github.run_attempt }}"
+    - name: Run Cypress tests for timelines
+      run: yarn run test-cypress-no-build --spec "**/timelines.cy.spec.js" --env burn=10
       env:
         TERM: xterm
     - name: Upload Cypress recording upon failure
       uses: actions/upload-artifact@v3
       if: failure()
       with:
-        name: cypress-recording-${{ matrix.folder }}-${{ matrix.edition }}
+        name: cypress-recording-timelines-${{ matrix.edition }}
         path: ./cypress
         if-no-files-found: ignore
