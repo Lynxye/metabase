@@ -57,6 +57,7 @@ export default class SearchBar extends React.Component {
   };
 
   render() {
+    const { onFocus } = this.props;
     const { active, searchText } = this.state;
     return (
       <OnClickOutsideWrapper
@@ -72,6 +73,7 @@ export default class SearchBar extends React.Component {
             value={searchText}
             maxLength={200}
             placeholder={t`Search` + "…"}
+            onFocus={onFocus}
             onClick={() => this.setState({ active: true })}
             onChange={e => this.setState({ searchText: e.target.value })}
             onKeyPress={e => {
