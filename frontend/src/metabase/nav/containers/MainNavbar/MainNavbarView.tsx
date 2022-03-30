@@ -13,6 +13,7 @@ import {
   getCollectionIcon,
   PERSONAL_COLLECTIONS,
 } from "metabase/entities/collections";
+import { IFRAMED } from "metabase/lib/dom";
 import * as Urls from "metabase/lib/urls";
 import { CollectionTreeItem } from "metabase/collections/utils";
 
@@ -69,7 +70,7 @@ function MainNavbarView({
         role="tree"
       />
       <ul>
-        {hasDataAccess && (
+        {hasDataAccess && !IFRAMED && (
           <SidebarLink
             icon="table_spaced"
             url={BROWSE_URL}
@@ -102,9 +103,11 @@ function MainNavbarView({
           {t`View archive`}
         </SidebarLink>
       </ul>
-      <ProfileLinkContainer>
-        <ProfileLink user={currentUser} />
-      </ProfileLinkContainer>
+      {!IFRAMED && (
+        <ProfileLinkContainer>
+          <ProfileLink user={currentUser} />
+        </ProfileLinkContainer>
+      )}
     </>
   );
 }
